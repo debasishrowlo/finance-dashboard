@@ -57,24 +57,29 @@ export default {
     borderRadius: generateBorderRadius(),
     fontSize: generateFontSize(),
     spacing: generateSpacing(),
+    colors: {
+      beige: {
+        100: "#F8F4F0",
+        500: "#98908B",
+      },
+      grey: {
+        100: "#F2F2F2",
+        300: "#B3B3B3",
+        500: "#696868",
+        900: "#201F24",
+      },
+      green: "#277C78",
+      yellow: "#F2CDAC",
+      cyan: "#82C9D7",
+      navy: "#626070",
+      red: "#C94736",
+      purple: "#826CB0",
+      white: "#FFFFFF",
+      transparent: "transparent",
+    },
     extend: {
       fontFamily: {
         "sans": ['"Red Hat Text", sans-serif'],
-      },
-      colors: {
-        red: {
-          100: "#C73B0F",
-          200: "#952c0b",
-        },
-        rose: {
-          50: "#FCF8F6",
-          100: "#F5EEEC",
-          300: "#CAAFA7",
-          400: "#AD8A85",
-          500: "#87635A",
-          900: "#260F08",
-        },
-        green: "#1EA575",
       },
       transitionDuration: {
         DEFAULT: "300ms",
