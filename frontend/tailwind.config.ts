@@ -79,7 +79,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        "sans": ['"Red Hat Text", sans-serif'],
+        "sans": ['"Public Sans", sans-serif'],
       },
       transitionDuration: {
         DEFAULT: "300ms",

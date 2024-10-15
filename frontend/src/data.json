@@ -134,22 +134,6 @@
             "recurring": false
         },
         {
-            "avatar": "./assets/images/avatars/elevate-education.jpg",
-            "name": "Elevate Education",
-            "category": "Education",
-            "date": "2024-08-04T11:15:22Z",
-            "amount": -50.00,
-            "recurring": true
-        },
-        {
-            "avatar": "./assets/images/avatars/serenity-spa-and-wellness.jpg",
-            "name": "Serenity Spa & Wellness",
-            "category": "Personal Care",
-            "date": "2024-08-03T14:00:37Z",
-            "amount": -30.00,
-            "recurring": true
-        },
-        {
             "avatar": "./assets/images/avatars/spark-electric-solutions.jpg",
             "name": "Spark Electric Solutions",
             "category": "Bills",
@@ -450,6 +434,56 @@
             "target": 1440.00,
             "total": 531.00,
             "theme": "#826CB0"
+        }
+    ],
+    "recurringBills": [
+        {
+            "amount": -10,
+            "date": "2024-08-11T18:45:38Z",
+            "name": "Pixel Playground",
+            "category": "Entertainment"
+        },
+        {
+            "amount": -50,
+            "date": "2024-08-04T11:15:22Z",
+            "name": "Elevate Education",
+            "category": "Education"
+        },
+        {
+            "amount": -30,
+            "date": "2024-08-03T14:00:37Z",
+            "name": "Serenity Spa & Wellness",
+            "category": "Personal Care"
+        },
+        {
+            "amount": -100,
+            "date": "2024-07-30T13:20:14Z",
+            "name": "Aqua Flow Utilities",
+            "category": "Bills"
+        },
+        {
+            "amount": -35,
+            "date": "2024-07-29T11:55:29Z",
+            "name": "EcoFuel Energy",
+            "category": "Bills"
+        },
+        {
+            "amount": -49.99,
+            "date": "2024-07-23T09:35:14Z",
+            "name": "ByteWise",
+            "category": "Lifestyle"
+        },
+        {
+            "amount": -9.99,
+            "date": "2024-07-21T10:05:42Z",
+            "name": "Nimbus Data Storage",
+            "category": "Bills"
+        },
+        {
+            "amount": -100,
+            "date": "2024-07-02T09:25:51Z",
+            "name": "Spark Electric Solutions",
+            "category": "Bills"
         }
     ]
 }
