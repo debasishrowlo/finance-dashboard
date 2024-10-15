@@ -44,6 +44,9 @@ const generateSpacing = () => {
 
   return spacing
 }
+    
+const spacing = generateSpacing()
+const lineHeight = spacing
 
 export default {
   future: {
@@ -56,7 +59,8 @@ export default {
   theme: {
     borderRadius: generateBorderRadius(),
     fontSize: generateFontSize(),
-    spacing: generateSpacing(),
+    spacing,
+    lineHeight,
     colors: {
       beige: {
         100: "#F8F4F0",

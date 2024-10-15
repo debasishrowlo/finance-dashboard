@@ -40,7 +40,7 @@ type SectionProps = {
 
 const Section = (props: SectionProps) => {
   return (
-    <div className="px-20 py-24 bg-white rounded-12">
+    <div className="px-20 py-24 bg-white rounded-12 md:p-32">
       <div className="flex justify-between items-center">
         <h2 className="text-20 font-bold">{props.title}</h2>
         <a href={props.detailsPageLink.to} className="flex items-center">
@@ -157,9 +157,9 @@ const App = () => {
         </button>
       </div>
       <div className="grow overflow-y-auto">
-        <div className="mx-auto max-w-1140 px-16 py-24 md:px-40 md:py-32 lg:px-0">
+        <div className="mx-auto max-w-1140 px-16 py-24 md:px-40 md:py-32 2xl:px-0">
           <h1 className="text-32 font-bold">Overview</h1>
-          <div className="mt-32 md:flex">
+          <div className="mt-32 md:flex md:gap-x-24">
             {[
               {
                 title: "Current Balance",
@@ -178,7 +178,7 @@ const App = () => {
               },
             ].map((balance, index) => (
               <div
-                className={classnames("mt-12 first:mt-0 p-20 rounded-12 md:w-1/3", {
+                className={classnames("mt-12 first:mt-0 p-20 rounded-12 md:w-1/3 md:mt-0 md:p-24", {
                   "bg-grey-900 text-white": balance.color === "dark",
                   "bg-white": balance.color === "light",
                 })}
@@ -199,16 +199,16 @@ const App = () => {
                 }}
               >
                 <div className="mt-20 md:flex">
-                  <div className="p-16 flex items-center bg-beige-100 rounded-12 md:w-1/3">
+                  <div className="p-16 flex items-center bg-beige-100 rounded-12 md:w-2/5">
                     <div className="w-40 h-40 flex justify-center items-center">
                       <img src={potIcon} alt="" />
                     </div>
                     <div className="ml-16">
                       <p className="text-14 text-grey-500">Total saved</p>
-                      <p className="mt-12 text-32 font-bold">{formatCurrency(totalSaved, { showDecimals: false })}</p>
+                      <p className="mt-12 text-32 leading-38 font-bold">{formatCurrency(totalSaved, { showDecimals: false })}</p>
                     </div>
                   </div>
-                  <div className="mt-20 flex flex-wrap gap-y-16 md:w-2/3">
+                  <div className="mt-20 flex flex-wrap gap-y-16 md:w-3/5 md:mt-0 md:ml-20">
                     {data.pots.slice(0, 4).map((pot, index) => (
                       <div className="flex w-1/2" key={index}>
                         <div
@@ -226,7 +226,7 @@ const App = () => {
                   </div>
                 </div>
               </Section>
-              <div className="mt-16">
+              <div className="mt-16 lg:mt-24">
                 <Section
                   title="Transactions"
                   detailsPageLink={{
@@ -247,7 +247,7 @@ const App = () => {
                       return (
                         <div key={index} className="py-20 first:pt-0 last:pb-0 flex justify-between border-t first:border-t-0 border-grey-100">
                           <div className="flex items-center">
-                            <img src={transaction.avatar} alt="" className="w-32 h-32 rounded-full" />
+                            <img src={transaction.avatar} alt="" className="w-32 aspect-square rounded-full md:w-40" />
                             <p className="ml-16 text-14 font-bold">{transaction.name}</p>
                           </div>
                           <div className="flex flex-col items-end">
@@ -267,7 +267,7 @@ const App = () => {
                 </Section>
               </div>
             </div>
-            <div className="mt-24 lg:w-2/5">
+            <div className="mt-24 lg:w-2/5 lg:ml-24 lg:mt-32">
               <div>
                 <Section
                   title="Budgets"
@@ -276,25 +276,30 @@ const App = () => {
                     to: "/budgets",
                   }}
                 >
-                  <div className="mt-20 flex flex-wrap gap-y-16 md:w-2/3">
-                    {data.budgets.slice(0, 4).map((budget, index) => (
-                      <div className="flex w-1/2" key={index}>
-                        <div
-                          className="w-4 h-full rounded-full"
-                          style={{
-                            backgroundColor: budget.theme,
-                          }}
-                        ></div>
-                        <div className="ml-16">
-                          <p className="text-12 text-grey-500">{budget.category}</p>
-                          <p className="mt-4 text-14 font-bold">{formatCurrency(budget.maximum, { showDecimals: false })}</p>
+                  <div className="mt-20 md:py-24 md:flex">
+                    <div className="w-full flex items-center md:grow">
+                      <div className="max-w-240 w-full aspect-square mx-auto bg-beige-500 rounded-full lg:mx-0"></div>
+                    </div>
+                    <div className="shrink mt-16 flex flex-wrap gap-y-16 md:mt-0 md:flex-col md:justify-between lg:ml-16">
+                      {data.budgets.slice(0, 5).map((budget, index) => (
+                        <div className="flex shrink w-1/2 md:w-full" key={index}>
+                          <div
+                            className="w-4 h-full rounded-full"
+                            style={{
+                              backgroundColor: budget.theme,
+                            }}
+                          ></div>
+                          <div className="ml-16">
+                            <p className="text-12 text-grey-500">{budget.category}</p>
+                            <p className="mt-4 text-14 font-bold">{formatCurrency(budget.maximum, { showDecimals: false })}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </Section>
               </div>
-              <div className="mt-16">
+              <div className="mt-16 lg:mt-24">
                 <Section
                   title="Recurring Bills"
                   detailsPageLink={{
