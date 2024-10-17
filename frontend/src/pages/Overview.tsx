@@ -1,5 +1,6 @@
 import React from "react"
 import classnames from "classnames"
+import { Link } from "react-router-dom"
 
 import Icon from "@/components/Icon"
 import potIcon from "@/assets/images/icon-pot.svg"
@@ -22,10 +23,10 @@ const Section = (props: SectionProps) => {
     <div className="px-20 py-24 bg-white rounded-12 md:p-32">
       <div className="flex justify-between items-center">
         <h2 className="text-20 font-bold">{props.title}</h2>
-        <a href={props.detailsPageLink.to} className="flex items-center">
+        <Link to={props.detailsPageLink.to} className="flex items-center">
           <span className="text-14 text-grey-500">{props.detailsPageLink.text}</span>
           <Icon name="caretLeft" className="ml-12 rotate-180 fill-grey-500" />
-        </a>
+        </Link>
       </div>
       {props.children}
     </div>

@@ -79,6 +79,7 @@ export default {
       red: "#C94736",
       purple: "#826CB0",
       white: "#FFFFFF",
+      black: "#000000",
       transparent: "transparent",
     },
     extend: {
