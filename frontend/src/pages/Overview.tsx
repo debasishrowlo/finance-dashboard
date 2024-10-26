@@ -34,10 +34,37 @@ const Section = (props: SectionProps) => {
 }
 
 const Overview = () => {
-
   const totalSaved = data.pots.reduce((total, pot) => {
     return total + pot.total
   }, 0)
+
+  const totalSpending = Math.abs(
+    data.transactions
+      .filter(transaction => {
+        return data.budgets.some(budget => budget.category === transaction.category)
+      })
+      .reduce((total, transaction) => {
+        return total + transaction.amount
+      }, 0)
+  )
+  const totalBudget = data.budgets.reduce((total, budget) => {
+    return total + budget.maximum
+  }, 0)
+
+  const radius = 17.5
+  const strokeWidth = 7
+  const segments = data.budgets.map(budget => ({
+    percentage: (budget.maximum / totalBudget) * 100,
+    theme: budget.theme,
+    offset: 0,
+  }))
+  let offset = 25
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i]
+    const previousPercentage = i === 0 ? 0 : segments[i - 1].percentage
+    offset -= previousPercentage
+    segment.offset = offset
+  }
 
   return (
     <div>
@@ -161,10 +188,39 @@ const Overview = () => {
             >
               <div className="mt-20 md:py-24 md:flex">
                 <div className="w-full flex items-center md:grow">
-                  <div className="max-w-240 w-full aspect-square mx-auto bg-beige-500 rounded-full lg:mx-0"></div>
+                  <div className="max-w-240 w-full aspect-square relative mx-auto lg:mx-0">
+                    <svg className="w-full" viewBox="0 0 42 42">
+                      <circle
+                        cx="21" cy="21"
+                        fill="transparent" stroke="transparent"
+                        r={radius} strokeWidth={strokeWidth}
+                      />
+                      {segments.map((segment, index) => (
+                        <circle
+                          key={index}
+                          cx="21" cy="21"
+                          fill="transparent"
+                          r={radius}
+                          stroke={segment.theme}
+                          strokeWidth={strokeWidth}
+                          strokeDasharray={`${segment.percentage} ${100 - segment.percentage}`}
+                          strokeDashoffset={segment.offset}
+                        />
+                      ))}
+                      <circle cx="21" cy="21" r="16" fill="rgba(255, 255, 255, 0.3)" stroke="transparent" strokeWidth="20" />
+                    </svg>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      <p className="text-center text-32 font-bold">
+                        {formatCurrency(totalSpending, { showDecimals: false })}
+                      </p>
+                      <p className="text-center text-12 text-grey-500">
+                        of {formatCurrency(totalBudget, { showDecimals: false })} limit
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 <div className="shrink mt-16 flex flex-wrap gap-y-16 md:mt-0 md:flex-col md:justify-between lg:ml-16">
-                  {data.budgets.slice(0, 5).map((budget, index) => (
+                  {data.budgets.map((budget, index) => (
                     <div className="flex shrink w-1/2 md:w-full" key={index}>
                       <div
                         className="w-4 h-full rounded-full"
