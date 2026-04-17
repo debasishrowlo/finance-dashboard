@@ -2,12 +2,12 @@ import React from "react"
 import classnames from "classnames"
 import { Link } from "react-router-dom"
 
-import Icon from "@/components/Icon"
-import potIcon from "@/assets/images/icon-pot.svg"
+import Icon from "../components/Icon"
+import potIcon from "../assets/images/icon-pot.svg"
 
-import { formatCurrency } from "@/utils"
+import { formatCurrency } from "../utils"
 
-import data from "@/data.json"
+import data from "../data.json"
 
 type SectionProps = {
   title: string,

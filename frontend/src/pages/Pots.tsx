@@ -12,15 +12,15 @@ import {
   TransitionChild, 
 } from "@headlessui/react"
 
-import Icon from "@/components/Icon"
-import { formatCurrency } from "@/utils"
+import Icon from "../components/Icon"
+import { formatCurrency } from "../utils"
 
-import ellipsisIcon from "@/assets/images/icon-ellipsis.svg"
-import closeIcon from "@/assets/images/icon-close-modal.svg"
-import dollarIcon from "@/assets/images/icon-dollar.svg"
-import checkCircleIcon from "@/assets/images/icon-selected.svg"
+import ellipsisIcon from "../assets/images/icon-ellipsis.svg"
+import closeIcon from "../assets/images/icon-close-modal.svg"
+import dollarIcon from "../assets/images/icon-dollar.svg"
+import checkCircleIcon from "../assets/images/icon-selected.svg"
 
-import data from "@/data.json"
+import data from "../data.json"
 
 type PotFormValues = {
   name: string,

@@ -2,11 +2,11 @@ import { useState } from "react"
 import classnames from "classnames"
 import { NavLink, Outlet } from "react-router-dom";
 
-import Icon, { IconName } from "@/components/Icon"
+import Icon, { IconName } from "../components/Icon"
 
-import logoLarge from "@/assets/images/logo-large.svg"
-import logoSmall from "@/assets/images/logo-small.svg"
-import minimizeIcon from "@/assets/images/icon-minimize-menu.svg"
+import logoLarge from "../assets/images/logo-large.svg"
+import logoSmall from "../assets/images/logo-small.svg"
+import minimizeIcon from "../assets/images/icon-minimize-menu.svg"
 
 const SidebarLayout = () => {
   const [menuOpen, setMenuOpen] = useState(true)
