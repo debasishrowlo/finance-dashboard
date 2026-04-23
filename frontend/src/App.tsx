@@ -6,6 +6,7 @@ import {
 
 import SidebarLayout from "./layouts/SidebarLayout"
 
+import Login from "./pages/Login"
 import Overview from "./pages/Overview"
 import Pots from "./pages/Pots"
 
@@ -13,7 +14,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Login</div>} />
+        <Route path="/" element={<Login />} />
         <Route element={<SidebarLayout />}>
           <Route path="/overview" element={<Overview />} />
           <Route path="/pots" element={<Pots />} />

@@ -1,23 +1,113 @@
 import express, { Request, Response } from "express"
 import path from "path"
+import bcrypt from "bcrypt"
+import mongoose from "mongoose"
+import jwt from "jsonwebtoken"
+import cookieParser from "cookie-parser"
+import * as z from "zod"
+import "dotenv/config"
 
-const app = express()
-const port = 8000
+import env from "./env"
 
-app.use(express.static(path.join(__dirname, "frontend")))
+import User from "./models/User"
 
-app.get('/api/test', (req: Request, res: Response) => {
-  res.json({ data: "Test" })
+const tokenSchema = z.object({
+  userId: z.string(),
 })
 
-app.all('/api/*', (req: Request, res: Response) => {
-  res.json({ data: "Not found" })
-})
+type Token = z.infer<typeof tokenSchema>
 
-app.get('/*', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "/frontend/index.html"))
-})
+const verifyToken = (token:string):Token => {
+  const decoded = jwt.verify(token, env.JWT_SECRET)
+  return tokenSchema.parse(decoded)
+}
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+const main = async () => {
+  await mongoose.connect(env.DB_URL)
+
+  const app = express()
+  app.use(express.json())
+  app.use(cookieParser())
+  app.use(express.static(path.join(__dirname, "frontend")))
+
+  app.get("/api/test", (request:Request, response:Response) => {
+    const token = request.cookies.token
+    
+    if (!token) {
+      response.status(401).json()
+      return
+    }
+
+    try {
+      const decodedToken = verifyToken(token)
+      response.status(200).json({ success: true })
+      return
+    } catch (e) {
+      response.status(401).json()
+      return
+    }
+  })
+
+  app.post("/api/sign-up", async (request:Request, response:Response) => {
+    const { email, password } = request.body
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await User.create({
+      email,
+      password: hashedPassword,
+    })
+
+    response.status(201).json({})
+  })
+
+  app.post("/api/login", async (request:Request, response:Response) => {
+    try {
+      const { email, password } = request.body
+
+      const user = await User.findOne({ email })
+
+      if (user === null) {
+        response.status(401).json({ message: "Invalid username or password" })
+        return
+      }
+
+      const passwordsMatch = await bcrypt.compare(password, user.password)
+
+      if (!passwordsMatch) {
+        response.status(401).json({ message: "Invalid username or password" })
+        return
+      }
+
+      const token = jwt.sign({ userId: user._id }, env.JWT_SECRET, { expiresIn: "1h" })
+
+      const oneHourInMs = 1 * 60 * 60 * 1000
+      response.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: oneHourInMs,
+      })
+
+      response.status(200).json({})
+    } catch (error) {
+      console.log(error)
+      response.status(500).json({ error: "Login failed" })
+    }
+  })
+
+  app.all('/api/*', (_, response: Response) => {
+    response.json({ data: "Not found" })
+  })
+
+  app.get('/*', (_, response: Response) => {
+    response.sendFile(path.join(__dirname, "/frontend/index.html"))
+  })
+
+  const port = env.PORT
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
+}
+
+main()
