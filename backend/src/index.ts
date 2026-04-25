@@ -1,4 +1,5 @@
-import express, { Request, Response } from "express"
+import express from "express"
+import type { CookieOptions, Request, Response } from "express"
 import path from "path"
 import bcrypt from "bcrypt"
 import mongoose from "mongoose"
@@ -8,6 +9,7 @@ import * as z from "zod"
 import "dotenv/config"
 
 import env from "./env"
+import { routes } from "./constants"
 
 import User from "./models/User"
 
@@ -48,7 +50,7 @@ const main = async () => {
     }
   })
 
-  app.post("/api/sign-up", async (request:Request, response:Response) => {
+  app.post(routes.signup, async (request:Request, response:Response) => {
     const { email, password } = request.body
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -61,7 +63,7 @@ const main = async () => {
     response.status(201).json({})
   })
 
-  app.post("/api/login", async (request:Request, response:Response) => {
+  app.post(routes.login, async (request:Request, response:Response) => {
     try {
       const { email, password } = request.body
 
@@ -82,11 +84,18 @@ const main = async () => {
       const token = jwt.sign({ userId: user._id }, env.JWT_SECRET, { expiresIn: "1h" })
 
       const oneHourInMs = 1 * 60 * 60 * 1000
-      response.cookie("token", token, {
-        httpOnly: true,
+      const cookieOptions:CookieOptions = {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: oneHourInMs,
+      }
+      response.cookie("token", token, {
+        ...cookieOptions,
+        httpOnly: true,
+      })
+      response.cookie("isLoggedIn", token, {
+        ...cookieOptions,
+        httpOnly: false,
       })
 
       response.status(200).json({})

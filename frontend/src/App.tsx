@@ -4,6 +4,8 @@ import {
   Route,
 } from "react-router-dom";
 
+import { routes } from "./constants"
+
 import SidebarLayout from "./layouts/SidebarLayout"
 
 import Login from "./pages/Login"
@@ -14,10 +16,10 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path={routes.home} element={<Login />} />
         <Route element={<SidebarLayout />}>
-          <Route path="/overview" element={<Overview />} />
-          <Route path="/pots" element={<Pots />} />
+          <Route path={routes.overview} element={<Overview />} />
+          <Route path={routes.pots} element={<Pots />} />
         </Route>
       </Routes>
     </BrowserRouter>

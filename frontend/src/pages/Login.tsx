@@ -1,19 +1,51 @@
 import { FormEvent, useState } from "react"
+import { useNavigate } from "react-router"
+
+import { routes, apiRoutes } from "../constants"
 
 const Login = () => {
+  const navigate = useNavigate()
 
-  const handleSubmit = (e:FormEvent) => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const handleSubmit = async (e:FormEvent) => {
     e.preventDefault()
 
+    const response = await fetch(apiRoutes.login, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      })
+    })
+
+    if (response.ok) {
+      navigate(routes.overview)
+    } else {
+      console.error()
+    }
   }
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <p>Email</p>
-        <input type="text" />
+        <input
+          type="text"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          autoFocus
+        />
         <p>Password</p>
-        <input type="text" />
+        <input
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
         <button type="submit">Submit</button>
       </form>
     </div>
