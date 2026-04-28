@@ -1,10 +1,13 @@
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
 import { routes, apiRoutes } from "../constants"
+import { useAppContext } from "../AppContext"
 
 const Login = () => {
   const navigate = useNavigate()
+
+  const { isLoggedIn } = useAppContext()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -29,6 +32,12 @@ const Login = () => {
       console.error()
     }
   }
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate(routes.overview)
+    }
+  }, [isLoggedIn])
 
   return (
     <div>

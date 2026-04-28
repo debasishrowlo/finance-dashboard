@@ -1,11 +1,15 @@
-import React from "react"
+import React, { useEffect } from "react"
 import classnames from "classnames"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+
+import { useAppContext } from "../AppContext"
 
 import Icon from "../components/Icon"
 import potIcon from "../assets/images/icon-pot.svg"
 
 import { formatCurrency } from "../utils"
+import { routes } from "../constants"
+
 
 import data from "../data.json"
 
@@ -34,6 +38,9 @@ const Section = (props: SectionProps) => {
 }
 
 const Overview = () => {
+  const navigate = useNavigate()
+  const { isLoggedIn } = useAppContext()
+
   const totalSaved = data.pots.reduce((total, pot) => {
     return total + pot.total
   }, 0)
@@ -65,6 +72,12 @@ const Overview = () => {
     offset -= previousPercentage
     segment.offset = offset
   }
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate(routes.home)
+    }
+  }, [isLoggedIn])
 
   return (
     <div>

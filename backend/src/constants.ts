@@ -1,4 +1,10 @@
 export const routes = {
-  signup: "/api/sign-up",
+  register: "/api/register",
   login: "/api/login",
+  logout: "/api/logout",
+}
+
+export const cookies = {
+  token: "token",
+  isLoggedIn: "isLoggedIn",
 }

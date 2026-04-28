@@ -1,17 +1,20 @@
 import mongoose from "mongoose"
 
 const schema = new mongoose.Schema({
-  email: {
-    type: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
     unique: true,
   },
-  password: {
+  token: {
     type: String,
     required: true,
   },
+}, {
+  collection: "refresh-tokens",
 })
 
-const model = mongoose.model("User", schema)
+const model = mongoose.model("RefreshToken", schema)
 
 export default model

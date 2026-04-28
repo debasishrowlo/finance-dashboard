@@ -2,6 +2,8 @@ import { useState } from "react"
 import classnames from "classnames"
 import { NavLink, Outlet } from "react-router-dom";
 
+import { useAppContext } from "../AppContext"
+
 import Icon, { IconName } from "../components/Icon"
 
 import logoLarge from "../assets/images/logo-large.svg"
@@ -10,6 +12,7 @@ import minimizeIcon from "../assets/images/icon-minimize-menu.svg"
 
 const SidebarLayout = () => {
   const [menuOpen, setMenuOpen] = useState(true)
+  const { setIsLoggedIn } = useAppContext()
 
   const navItems:Array<{
     name: string,
@@ -22,6 +25,10 @@ const SidebarLayout = () => {
     { name: "Pots", to: "/pots", icon: "pots", },
     { name: "Recurring Bills", to: "/recurring-bills", icon: "recurringBills", },
   ]
+
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+  }
 
   return (
     <div className="h-screen flex flex-col-reverse lg:flex-row">
@@ -79,18 +86,21 @@ const SidebarLayout = () => {
             ))}
           </div>
         </div>
-        <button
-          type="button" 
-          className="mb-48 pl-32 py-16 hidden items-center lg:flex"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <img src={minimizeIcon} alt="" className={classnames("w-24", {
-            "rotate-180": !menuOpen,
-          })} />
-          {menuOpen && (
-            <span className="ml-16 font-bold text-grey-300">Minimize Menu</span>
-          )}
-        </button>
+        <div>
+          <button type="button" className="w-full text-white" onClick={handleLogout}>Logout</button>
+          <button
+            type="button" 
+            className="mb-48 pl-32 py-16 hidden items-center lg:flex"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <img src={minimizeIcon} alt="" className={classnames("w-24", {
+              "rotate-180": !menuOpen,
+            })} />
+            {menuOpen && (
+              <span className="ml-16 font-bold text-grey-300">Minimize Menu</span>
+            )}
+          </button>
+        </div>
       </div>
       <div className="grow overflow-y-auto">
         <div className="mx-auto max-w-1140 px-16 py-24 md:px-40 md:py-32 2xl:px-0">

@@ -2,7 +2,8 @@ import * as z from "zod"
 
 const envSchema = z.object({
   "DB_URL": z.url(),
-  "JWT_SECRET": z.string(),
+  "ACCESS_TOKEN_SECRET": z.string(),
+  "REFRESH_TOKEN_SECRET": z.string(),
   "PORT": z.coerce.number(),
 })
 

@@ -9,9 +9,10 @@ import * as z from "zod"
 import "dotenv/config"
 
 import env from "./env"
-import { routes } from "./constants"
+import { routes, cookies } from "./constants"
 
 import User from "./models/User"
+import RefreshToken from "./models/RefreshToken"
 
 const tokenSchema = z.object({
   userId: z.string(),
@@ -20,7 +21,7 @@ const tokenSchema = z.object({
 type Token = z.infer<typeof tokenSchema>
 
 const verifyToken = (token:string):Token => {
-  const decoded = jwt.verify(token, env.JWT_SECRET)
+  const decoded = jwt.verify(token, env.ACCESS_TOKEN_SECRET)
   return tokenSchema.parse(decoded)
 }
 
@@ -31,6 +32,8 @@ const main = async () => {
   app.use(express.json())
   app.use(cookieParser())
   app.use(express.static(path.join(__dirname, "frontend")))
+
+  // TODO: Add cors
 
   app.get("/api/test", (request:Request, response:Response) => {
     const token = request.cookies.token
@@ -50,10 +53,17 @@ const main = async () => {
     }
   })
 
-  app.post(routes.signup, async (request:Request, response:Response) => {
+  app.post(routes.register, async (request:Request, response:Response) => {
     const { email, password } = request.body
 
     const hashedPassword = await bcrypt.hash(password, 10)
+
+    const existingUser = await User.findOne({ email })
+
+    if (existingUser) {
+      response.status(409).json({ message: "User already exists" })
+      return
+    }
 
     await User.create({
       email,
@@ -81,19 +91,33 @@ const main = async () => {
         return
       }
 
-      const token = jwt.sign({ userId: user._id }, env.JWT_SECRET, { expiresIn: "1h" })
+      const msPerSecond = 1000
+      const secondsPerMinute = 60
+      const minutes = 15
+      const accessTokenLifetime = minutes * secondsPerMinute * msPerSecond
 
-      const oneHourInMs = 1 * 60 * 60 * 1000
+      const accessToken = jwt.sign({ userId: user._id }, env.ACCESS_TOKEN_SECRET, { expiresIn: accessTokenLifetime })
+
       const cookieOptions:CookieOptions = {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: oneHourInMs,
+        maxAge: accessTokenLifetime,
       }
-      response.cookie("token", token, {
+
+      const refreshToken = jwt.sign({ userId: user._id }, env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" })
+
+      await RefreshToken.findOneAndUpdate(
+        { userId: user._id }, 
+        { token: refreshToken }, 
+        { upsert: true },
+      )
+
+      response.cookie(cookies.token, accessToken, {
         ...cookieOptions,
         httpOnly: true,
       })
-      response.cookie("isLoggedIn", token, {
+
+      response.cookie(cookies.isLoggedIn, true, {
         ...cookieOptions,
         httpOnly: false,
       })
@@ -103,6 +127,27 @@ const main = async () => {
       console.log(error)
       response.status(500).json({ error: "Login failed" })
     }
+  })
+
+  app.post(routes.logout, async (request:Request, response:Response) => {
+    const token = request.cookies.token
+
+    if (!token) {
+      response.status(200).json({})
+      return
+    }
+
+    const decodedToken = verifyToken(token)
+
+    await RefreshToken.findOneAndDelete({
+      userId: decodedToken.userId,
+    })
+
+    response.clearCookie(cookies.token)
+    response.clearCookie(cookies.isLoggedIn)
+
+    response.status(200).json({})
+    return
   })
 
   app.all('/api/*', (_, response: Response) => {
