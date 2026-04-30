@@ -2,7 +2,8 @@ import { createContext, useContext } from 'react'
 
 type AppContextType = {
   isLoggedIn: boolean,
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>,
+  isInitialized: boolean,
+  syncAuthState: () => void,
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)

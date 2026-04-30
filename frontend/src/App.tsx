@@ -4,39 +4,52 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import cookies from "js-cookie"
+import jsCookie from "js-cookie"
 
-import { routes } from "./constants"
+import { routes, cookies } from "./constants"
 import AppContext from "./AppContext"
 
+import AuthGuard from "./AuthGuard"
 import SidebarLayout from "./layouts/SidebarLayout"
 
 import Login from "./pages/Login"
 import Overview from "./pages/Overview"
 import Pots from "./pages/Pots"
 
+const getCookie = (name:string) => {
+  return jsCookie.get(name)
+}
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  const syncAuthState = () => {
+    const loggedInCookie = getCookie(cookies.isLoggedIn)
+    setIsLoggedIn(loggedInCookie !== undefined)
+    setIsInitialized(true)
+  }
 
   useEffect(() => {
-    if (cookies.get("isLoggedIn") !== undefined) {
-      setIsLoggedIn(true)
-    }
+    syncAuthState()
   }, [])
 
   const contextValues = {
     isLoggedIn, 
-    setIsLoggedIn,
+    isInitialized,
+    syncAuthState,
   }
 
   return (
     <AppContext.Provider value={contextValues}>
       <BrowserRouter>
         <Routes>
-          <Route path={routes.home} element={<Login />} />
-          <Route element={<SidebarLayout />}>
-            <Route path={routes.overview} element={<Overview />} />
-            <Route path={routes.pots} element={<Pots />} />
+          <Route path={routes.login} element={<Login />} />
+          <Route element={<AuthGuard />}>
+            <Route element={<SidebarLayout />}>
+              <Route path={routes.overview} element={<Overview />} />
+              <Route path={routes.pots} element={<Pots />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

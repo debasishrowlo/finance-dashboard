@@ -7,7 +7,7 @@ import { useAppContext } from "../AppContext"
 const Login = () => {
   const navigate = useNavigate()
 
-  const { isLoggedIn } = useAppContext()
+  const { isLoggedIn, syncAuthState } = useAppContext()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -27,9 +27,10 @@ const Login = () => {
     })
 
     if (response.ok) {
+      syncAuthState()
       navigate(routes.overview)
     } else {
-      console.error()
+      console.error("Login failed")
     }
   }
 

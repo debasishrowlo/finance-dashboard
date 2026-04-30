@@ -1,9 +1,9 @@
-import { routes as apiRoutes } from "../../backend/src/constants"
+import { routes as apiRoutes, cookies } from "../../backend/src/constants"
 
-export { apiRoutes }
+export { apiRoutes, cookies }
 
 export const routes = {
-  home: "/",
+  login: "/",
   overview: "/overview",
   pots: "/pots",
 }

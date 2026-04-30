@@ -10,9 +10,11 @@ import logoLarge from "../assets/images/logo-large.svg"
 import logoSmall from "../assets/images/logo-small.svg"
 import minimizeIcon from "../assets/images/icon-minimize-menu.svg"
 
+import { apiRoutes } from "../constants"
+
 const SidebarLayout = () => {
   const [menuOpen, setMenuOpen] = useState(true)
-  const { setIsLoggedIn } = useAppContext()
+  const { syncAuthState } = useAppContext()
 
   const navItems:Array<{
     name: string,
@@ -26,8 +28,17 @@ const SidebarLayout = () => {
     { name: "Recurring Bills", to: "/recurring-bills", icon: "recurringBills", },
   ]
 
-  const handleLogout = () => {
-    setIsLoggedIn(false)
+  const handleLogout = async () => {
+    const response = await fetch(apiRoutes.logout, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    })
+
+    if (response.ok) {
+      syncAuthState()
+    } else {
+      console.error("Logout failed")
+    }
   }
 
   return (
